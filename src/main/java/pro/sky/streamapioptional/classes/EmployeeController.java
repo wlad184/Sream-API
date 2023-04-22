@@ -56,22 +56,22 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/max-salary")
-    public Employee maxsalary(@RequestParam("department") String department) {
+    public Employee maxsalary(@RequestParam("department") int department) {
         return employeeListService.maxSalary(department);
     }
 
     @GetMapping(path = "/min-salary")
-    public Employee minsalary(@RequestParam("department") String department) {
+    public Employee minsalary(@RequestParam("department") int department) {
         return employeeListService.minSalary(department);
     }
 
     @GetMapping(path = "/all")
-    public List<Employee> allDepartments() {
+    public Map<Integer, List<Employee>> allDepartments() {
         return employeeListService.all();
     }
 
     @GetMapping(path = "/departmentId")
-    public List<Employee> allDepartmentId(@RequestParam("department") String department) {
+    public List<Employee> allDepartmentId(@RequestParam("department") int department) {
         return employeeListService.allDepartment(department);
     }
 

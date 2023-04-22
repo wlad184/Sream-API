@@ -3,7 +3,6 @@ package pro.sky.streamapioptional.classes;
 import org.springframework.stereotype.Service;
 import pro.sky.streamapioptional.classes.Excertions.EmployeeAlreadyAddedException;
 import pro.sky.streamapioptional.classes.Excertions.EmployeeNotFoundException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,7 +15,7 @@ public class EmployeeListService {
             "Серьгей Сидоров", new Employee("Серьгей", "Сидоров", 40000f, 1),
             "Антон Сидоров", new Employee("Антон", "Сидоров", 50000f, 3),
             "Семён Фёдоров", new Employee("Семён", "Фёдоров", 70000f, 1),
-            "Роман Романюк", new Employee("Роман", "Романюк", 55555f, 2),
+            "Роман Романюк", new Employee("Роман", "Романюк", 77777f, 2),
             "Светлана Фёдорова", new Employee("Светлана", "Фёдорова", 45000f, 2)
     ));
 
@@ -51,55 +50,45 @@ public class EmployeeListService {
     }
 
     //расчет максимальной зарплаты
-    public Employee maxSalary(String department) {
-        List<Employee> employeeMaxList = new ArrayList<>(emplMap.values());
-        for (int i = 0; i < employeeMaxList.size(); i++) {
-            if (employeeMaxList.get(i).getDepartment() != Integer.parseInt(department)) {
-                employeeMaxList.remove(i);
-                i = i - 1;
-            }
-        }
-        Employee userMax = employeeMaxList.stream()
+    public Employee maxSalary(int department) {
+        List<Employee> employeeMinList = new ArrayList<>(emplMap.values());
+        Employee userMax = employeeMinList.stream()
+                .filter(e -> e.getDepartment() == department  )
                 .max(Comparator.comparingDouble(Employee::getSalary))
-                .get();
-
+                .orElse(null);
         return userMax;
     }
-
-    public Employee minSalary(String department) {
+/*return employeeService.getAll().stream()
+        .filter(employee -> employee.getDepartment() == department)
+            .max(Comparator.comparingInt(Employee::getSalary))
+            .orElse(null);*/
+    public Employee minSalary(int department) {
         List<Employee> employeeMinList = new ArrayList<>(emplMap.values());
-        for (int i = 0; i < employeeMinList.size(); i++) {
-            if (employeeMinList.get(i).getDepartment() != Integer.parseInt(department)) {
-                employeeMinList.remove(i);
-                i = i - 1;
-            }
-        }
         Employee userMin = employeeMinList.stream()
+                .filter(e -> e.getDepartment() == department  )
                 .min(Comparator.comparingDouble(Employee::getSalary))
-                .get();
-
+                .orElse(null);
         return userMin;
     }
+    /*public Map<Integer, List<Employee>> findEmployeesByDepartment() {
+        return employeeService.getAll().stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment));
+    }*/
+    public Map<Integer, List<Employee>> all() {
+        List<Employee> employeeMinList = new ArrayList<>(emplMap.values());
+        Map<Integer, List<Employee>> employeeAllMap = employeeMinList.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment));
 
-    public List<Employee> all() {
-        List<Employee> employeeAllList = new ArrayList<>(emplMap.values());
-        employeeAllList = employeeAllList.stream()
-                .sorted(Comparator.comparing(Employee::getDepartment))
-                .collect(Collectors.toList());
-
-        return employeeAllList;
+        return employeeAllMap;
 
     }
 
-    public List<Employee> allDepartment(String department) {
-        List<Employee> employeeAllDepartmentList = new ArrayList<>(emplMap.values());
-        for (int i = 0; i < employeeAllDepartmentList.size(); i++) {
-            if (employeeAllDepartmentList.get(i).getDepartment() != Integer.parseInt(department)) {
-                employeeAllDepartmentList.remove(i);
-                i = i - 1;
-            }
-        }
-        return employeeAllDepartmentList;
+    public List<Employee> allDepartment(int department) {
+        List<Employee> employeeMinList = new ArrayList<>(emplMap.values());
+        List<Employee> listDepId = employeeMinList.stream()
+        .filter(e -> e.getDepartment() == department)
+                .toList();
+        return listDepId;
 
 
 
